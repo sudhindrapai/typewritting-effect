@@ -1,0 +1,13 @@
+.Cursor{
+    height: 50px;
+    border-right: 1px solid #fb2629;
+    animation:cursor 550ms infinite;
+}
+
+@keyframes cursor{
+    0%{     border-color: #fb2629;    }
+    49%{    border-color: #fb2629; }
+    60%{    border-color: transparent; }
+    99%{    border-color:transparent;  }
+    100%{   border-color: #fb2629;    }
+}
