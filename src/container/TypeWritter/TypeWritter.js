@@ -6,10 +6,11 @@ import Cursor from '../../component/Cursor/Cursor'
 
 class TypeWriter extends Component {
     state = {
-      completeSentence: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      completeSentence: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
         typingSentence:[],
         timeToTypeCharacter:100,
-        timeToWaitAfterComplete:1000,
+        timeToWaitAfterComplete:3,
+        responseWaitTime:3,
         isTyped:false,
         isLooped:true,
     };
@@ -38,9 +39,20 @@ class TypeWriter extends Component {
             this.setState({
                ...this.state,
                 typingSentence:updatedTypedArray,
-                isTyped:!(updatedTypedArray.length === 0)
+                isTyped:!(updatedTypedArray.length === 0),
+                timeToWaitAfterComplete:
+                    (updatedTypedArray.length === 0) ? this.state.responseWaitTime : this.state.timeToWaitAfterComplete
             });
         },100);
+    };
+
+    decreaseWaitTime = () => {
+        setTimeout(() => {
+            this.setState({
+                ...this.state,
+                timeToWaitAfterComplete:this.state.timeToWaitAfterComplete>0 ? this.state.timeToWaitAfterComplete-1:0
+            });
+        },1000)
     };
 
     componentDidMount() {
@@ -53,7 +65,11 @@ class TypeWriter extends Component {
         if (this.state.typingSentence.length !== this.state.completeSentence.length && !(this.state.isTyped)){
             this.writeSentence();
         } else if (this.state.isTyped && this.state.isLooped) {
-            this.clearSentence();
+            if (this.state.timeToWaitAfterComplete === 0) {
+                this.clearSentence();
+            } else {
+                this.decreaseWaitTime();
+            }
         }
     }
 
